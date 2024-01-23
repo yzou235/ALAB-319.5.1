@@ -2,6 +2,7 @@ import express from "express";
 // import db from "../db/conn.mjs";
 // import { ObjectId } from 'mongodb';
 import Grade from "../model/gradeModel.mjs";
+import mongoose from 'mongoose';
 
 const router = express.Router()
 
@@ -31,15 +32,16 @@ router.post("/", async(req, res) => {
 
 // Get a single grade entry
 router.get("/:id", async(req, res) => {
-    let result = await Grade.findById(req.params.id);
+    let result = await Grade.findById(new mongoose.Types.ObjectId(req.params.id));
 
     if (!result) res.status(404).send('Not found');
     else res.status(200).send(result);
 });
 
+
 // Add a score to a grade entry
 router.patch("/:id/add", async (req, res) => {
-    let query = { _id: req.params.id };
+    let query = { _id: new mongoose.Types.ObjectId(req.params.id) };
     let result = await Grade.updateOne(query, {
         $push: {scores: req.body},
     });
@@ -49,7 +51,7 @@ router.patch("/:id/add", async (req, res) => {
 
 // Remove a score from a grade entry
 router.patch('/:id/delete', async(req, res) => {
-    let query = { _id: req.params.id };
+    let query = { _id: new mongoose.Types.ObjectId(req.params.id) };
     let result = await Grade.updateOne(query, {
         $pull: { scores: req.body },
     });
@@ -60,7 +62,7 @@ router.patch('/:id/delete', async(req, res) => {
 
 // Delete a single grade entry
 router.delete('/:id/delete', async(req, res) => {
-    let query = { _id: req.params.id };
+    let query = { _id: new mongoose.Types.ObjectId(req.params.id) };
     let result = await Grade.deleteOne(query);
 
     if (!result) res.send("Nor found").status(404);
