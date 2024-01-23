@@ -2,10 +2,23 @@ import mongoose from 'mongoose';
 
 const gradeSchema = new mongoose.Schema({
     scores:[{
-        score_value: Number,
+        type: {
+            type: String,
+            required: true,
+        },
+        score: {
+            type: Number,
+            required: true,
+        },
     }],
-    class_id: Number,
-    learner_id: Number
+    class_id: {
+        type: Number,
+        required: true,
+    },
+    learner_id: {
+        type: Number,
+        required: true,
+    }
 });
 
 const gradeModel = mongoose.model('Grade', gradeSchema);
